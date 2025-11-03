@@ -1,34 +1,30 @@
 import jwt from "jsonwebtoken"
-
 const auth = async (req, res, next) => {
-	try {
-		const token =
-			req.cookies.token ||
-			req.body.token ||
-			req.header("Authorization").replace("Bearer ", "");
+  try {
+    const token =
+      req.cookies.token ||
+      req.body.token ||
+      req.header("Authorization").replace("Bearer ", "");
 
-		if (!token) {
-			return res.status(401).json({ success: false, message: `Token Missing` });
-		}
+    if (!token) {
+      return res.status(401).json({ success: false, message: `Token Missing` });
+    }
 
-		try {
-			const decode = await jwt.verify(token, process.env.JWT_SECRET);
-			console.log(decode);
-			req.user = decode;
-		} catch (error) {
-			return res
-				.status(401)
-				.json({ success: false, message: "token is invalid" });
-		}
+    try {
+      const decode = await jwt.verify(token, process.env.JWT_SECRET);
+    //   console.log(decode)
+    } catch (error) {
+      return res
+        .status(401)
+        .json({ success: false, message: "token is invalid" });
+    }
 
-		next();
-	} catch (error) {
-		return res.status(401).json({
-			success: false,
-			message: `Something Went Wrong While Validating the Token`,
-		});
-	}
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: `Something Went Wrong While Validating the Token`,
+    });
+  }
 };
-
-
-export {auth}
+export { auth };
