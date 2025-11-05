@@ -164,5 +164,35 @@ const logout = async (req, res) => {
   }
 };
 
+const getAllUser = async (req, res) => {
+  try {
+    const allUser = await User.find({},
+      {
+        certificateNumber:1,
+        name: 1,
+        email: 1,
+        phone: 1,
+        employeeID: 1,
+        startDate: 1,
+        endDate: 1,
+        Domain: 1,
+      }
+    )
+    
+    console.log(allUser.length);
+    return res.status(200).json({
+      success: true,
+      data: allUser,
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(404).json({
+      success: false,
+      message: `Can't Fetch all User Data`,
+      error: error.message,
+    })
+  }
+}
+
 // export { login, addUser, logout,signup };
-export { login, addUser, logout };
+export { login, addUser, logout, getAllUser };
