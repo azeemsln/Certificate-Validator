@@ -2,7 +2,7 @@ import Admin from "../models/Admin.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 
 // const signup = async (req, res) => {
 //   try {
@@ -49,6 +49,8 @@ import { v4 as uuidv4 } from "uuid";
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email,password);
+    
 
     if (!email || !password) {
       return res.status(400).json({
