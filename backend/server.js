@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5001;
 
 
 connect();
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', "*"]; // 👈 Your frontend URL(s)
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173']; // 👈 Your frontend URL(s)
 app.use(
     cors({
         origin: (origin, callback) => {

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import LoginForm from "../components/LoginForm";  
@@ -8,19 +9,21 @@ import Dashboard from "../components/Dashboard";
 const AdminPage = () => {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
+    // console.log(token);
+    
     if (token) {
       setIsLoggedIn(true);
     }
-  }, []);
+  }, [setIsLoggedIn]);
 
   const handleLogin = (status) => {
-    console.log(status);
+    // console.log(status);
     setIsLoggedIn(status);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
     localStorage.removeItem("adminEmail");
     setIsLoggedIn(false);
   };

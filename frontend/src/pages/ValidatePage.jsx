@@ -7,7 +7,7 @@ import CertificateCard from '../components/CertificateCard'
 
 const ValidatePage = () => {
   const [certificateNumber, setCertificateNumber] = useState('')
-  const [data, setData] = useState(null)
+  const [certificateData, setCertificateData] = useState('')
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
 
@@ -22,19 +22,20 @@ const ValidatePage = () => {
   const handleSubmit = async () => {
     if(certificateNumber){
     try {
-      const data = await validate(certificateNumber,'api/v1/user/getdetails');
-      setSuccess({ value: 'Certificate Validate Successful...' })
+      const data= await validate(certificateNumber)
+      setCertificateData(data)
+      setSuccess({ value: 'Certificate Validate Successfull...' })
       setError(null)
-      setData(data.data)
     } catch (error) {
       setError(error.message)
       setSuccess(null)
     }
   }
-  else{
-    setError("Please Enter Certificate");
+    else{
+      setError("Please Enter Certificate");
+    }
   }
-  }
+  
 
   return (
     <div className='w-full min-h-screen bg-[#37353E] p-2'>
@@ -61,9 +62,9 @@ const ValidatePage = () => {
               <Success value={success.value} />
             </div>
             <div className='my-3'>
-              <CertificateCard data={data} />
+              <CertificateCard certificateData={certificateData}/>
             </div>
-          </div>
+          </div> 
         )}
 
         {error && (

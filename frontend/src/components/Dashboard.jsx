@@ -1,33 +1,76 @@
-import React, { useState } from "react";
-import { mockCertificates } from "../utils/certificateData";
+import  {React, useEffect, useState } from "react";
+// import { mockCertificates } from "../utils/certificateData";
 import AddCertificateForm from "./AddCertificateForm";
 import CertificateList from "./CertificateList";
 import { FileTextIcon, Plus, ShieldCheck } from "lucide-react";
 import Swal from "sweetalert2";
+import { apiConnector } from "../services/apiConnector";
+const ADD_API = "http://localhost:5000/api/v1/admin/adduser";
+const ALL_CERTIFICATES_API = "http://localhost:5000/api/v1/admin/getalluser";
+
 
 const Dashboard = () => {
   const [view, setView] = useState("");
-  const certificates= mockCertificates;
+  const [certificates, setCertificates] = useState([])
+
+  useEffect(() => {
+    async function fetchCertificates() {
+      try {
+        const response = await apiConnector("GET", ALL_CERTIFICATES_API);
+        
+        if (response.data && response.data.success) {
+          setCertificates(response.data.data);
+          
+        } else {
+          console.error("Failed to fetch certificates", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching certificates:", error);
+      }
+    }
+     fetchCertificates();
+  }, []);
+  
+  
+  
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(certificates.length / 3);
+  const totalPages = Math.ceil(certificates?.length / 5);
 
 
-  const handleAdd = (formData) => {
-    const newCertificate = {
-      id: certificates.length + 1,
-      ...formData,
-      certNumber: `CERT-${(certificates.length + 1)
-        .toString()
-        .padStart(3, "0")}`,
-    };
-    mockCertificates.push(newCertificate); // Update mock data
+  const handleAdd = async (formData) => {
+    // const newCertificate = {
+    //   id: certificates.length + 1,
+    //   ...formData,
+    //   certNumber: `CERT-${(certificates.length + 1)
+    //     .toString()
+    //     .padStart(3, "0")}`,
+    // };
+    // mockCertificates.push(newCertificate); // Update mock data
+    //   Swal.fire({
+    //      icon: "success",
+    //      title: `Certificate added successfully!`,
+    //      showConfirmButton: false,
+    //      timer: 2000,
+    //    });
+
+    try {
+      const response = await apiConnector("POST", ADD_API,formData)
+
+      console.log("User added RESPONSE............", response)
+
+      if (!response.data.success) {
+        throw new Error(response.data.message)
+      }
       Swal.fire({
          icon: "success",
          title: `Certificate added successfully!`,
          showConfirmButton: false,
          timer: 2000,
        });
+    } catch (error) {
+      console.log("User added API ERROR............", error)
+    }
     setView("view");
   };
   
@@ -101,3 +144,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+

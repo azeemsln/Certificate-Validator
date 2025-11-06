@@ -1,35 +1,33 @@
 import React, { useState } from "react";
 
+const ADD_API = "http://localhost:5000/api/v1/admin/adduser";
+
 const AddCertificateForm = ({ onAdd }) => {
   const [formData, setFormData] = useState({
+    certificateNumber:"",
     name: "",
     email: "",
     phone: "",
-    employeeId: "",
+    employeeID: "",
     startDate: "",
     endDate: "",
-    domain: "",
-    certNumber: "",
+    Domain: "",
   });
 
+  // const [error, setError] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (e) => {
-    formData.certNumber=Math.floor(1000 + Math.random() * 9000);
+    formData.certNumber = Math.floor(1000 + Math.random() * 9000);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    // const {name, email, password } = formData;
+
     onAdd(formData);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      employeeId: "",
-      startDate: "",
-      endDate: "",
-      domain: "",
-      certNumber:""
-    });
+    
   };
 
   return (
@@ -91,8 +89,8 @@ const AddCertificateForm = ({ onAdd }) => {
           </label>
           <input
             type="text"
-            name="employeeId"
-            value={formData.employeeId}
+            name="employeeID"
+            value={formData.employeeID}
             onChange={handleChange}
             placeholder="Enter employee ID"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
@@ -135,8 +133,8 @@ const AddCertificateForm = ({ onAdd }) => {
           <label className="block text-gray-700 font-medium mb-2">Domain</label>
           <input
             type="text"
-            name="domain"
-            value={formData.domain}
+            name="Domain"
+            value={formData.Domain}
             onChange={handleChange}
             placeholder="e.g., Web Development, Data Science"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"

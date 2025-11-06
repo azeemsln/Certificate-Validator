@@ -1,11 +1,14 @@
 import React from "react";
 import Swal from "sweetalert2";
 
+const API_URL = 'http://localhost:5000/api/v1/admin/adduser';
+
+
 const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }) => {
   const startIndex = (currentPage - 1) * 5;
-  const currentItems = certificates.slice(startIndex, startIndex + 5);
+  const currentItems = certificates?.slice(startIndex, startIndex + 5);
  
-  console.log(currentItems,"currentItems");
+  // console.log(currentItems,"currentItems");
  
   const handleEdit = (cert) => {
     Swal.fire({
@@ -48,9 +51,9 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }
           </thead>
 
           <tbody>
-            {currentItems.map((cert) => (
+            {currentItems?.map((cert) => (
               <tr
-                key={cert.id}
+                key={cert._id}
                 className="hover:bg-gray-50 transition-colors text-sm"
               >
                 <td className="p-3 border font-medium text-gray-800">
@@ -66,7 +69,7 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }
                   {new Date(cert.endDate).toLocaleDateString()}
                 </td>
                 <td className="p-3 border text-indigo-600 font-medium">
-                  {cert.domain}
+                  {cert.Domain}
                 </td>
                 <td className="p-3 border text-center space-x-2">
                   <button

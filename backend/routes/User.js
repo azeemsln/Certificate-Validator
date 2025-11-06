@@ -3,6 +3,6 @@ import { getDetails } from "../controllers/User.js";
 const router = express.Router();
 
 
-router.post("/getdetails", getDetails);
+router.get("/getdetails/:certificateNumber", getDetails);
 
 export default router;

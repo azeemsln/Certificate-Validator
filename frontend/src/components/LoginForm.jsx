@@ -1,7 +1,9 @@
+
 import { useState } from 'react'
 import { Eye, Mail } from 'lucide-react'
+import { apiConnector } from '../services/apiConnector';
 
-const API_URL = 'http://localhost:5001/api/v1/admin/login';
+const API_URL = 'http://localhost:5000/api/v1/admin/login';
 
 const LoginForm = ({onLogin}) => {
   const [formData, setFormData] = useState({
@@ -21,7 +23,7 @@ const LoginForm = ({onLogin}) => {
     e.preventDefault() 
     setError("");
     setIsLoading(true);
-     const { email, password } = formData;
+     const { email, password } = formData;  
 
     // Simple check
     if (!email || !password) {
@@ -30,25 +32,29 @@ const LoginForm = ({onLogin}) => {
       return;
   }
   try {
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-    });
+    const response = await apiConnector("POST",API_URL,{
+      email,password
+    })
+      // console.log("LOGIN API RESPONSE............", response)
 
+    if (!response.data.success) {
+        throw new Error(response.data.message)
+      }
     // Parse the response data
-    const data = await response.json();
-
-    if (response.ok) {
+    // console.log(response);
+    // console.log(response.data);
+    const data = await response.data;
+    // console.log(data?.token);
+    
+    if (data.success==true) {
         // Assuming your backend returns a token on success, e.g., { success: true, token: "...", email: "..." }
-        const { token, email: adminEmail,admin } = data; 
+        const { token,admin } = data; 
+        const {email: email } = data.admin; 
         
         // 1. Store the actual token from the server
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("adminName", admin.name);
-        localStorage.setItem("adminEmail", adminEmail || email); // Store email for display
+        localStorage.setItem("token", JSON.stringify(token));
+        localStorage.setItem("adminName", JSON.stringify(admin.name));
+        localStorage.setItem("adminEmail", email); // Store email for display
         
         // 2. Clear error and trigger login success
         onLogin(true);
