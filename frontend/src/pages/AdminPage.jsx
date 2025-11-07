@@ -29,9 +29,13 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       {!isLoggedIn ? (
+         <div className="w-full h-screen">
+          <Navbar onLogout={handleLogout} />
         <LoginForm onLogin={handleLogin} />
+
+           </div>
       ) : (
         <div className="w-full">
           <Navbar onLogout={handleLogout} />

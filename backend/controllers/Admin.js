@@ -107,18 +107,22 @@ const addUser = async (req, res) => {
     const randomNum = Math.floor(Math.random() * 10000); // 0–9999
     return `${timestamp}${randomNum}`;
   }
+  // Destructure inputs once, outside the try block
+  const { name, email, phone, employeeID, startDate, endDate, Domain } = req.body;
+
   try {
-    let certificateNumber = generateCertificateNumber();
-    let checkUser= await User.findOne({certificateNumber});
-    console.log(certificateNumber);
-    console.log(checkUser);
-    
-    while(checkUser){
-        certificateNumber = generateCertificateNumber();
-        checkUser= await User.find({certificateNumber})
+    let certificateNumber;
+    let checkUser;
+
+    do{
+      certificateNumber= generateCertificateNumber();
+      checkUser=await User.findOne({certificateNumber});
+      console.log(`Attempted Cert: ${certificateNumber}, Found: ${!!checkUser}`);
     }
-    const { name, email, phone, employeeID, startDate, endDate, Domain } =
-      req.body;
+    while(checkUser) // Loop continues if checkUser is NOT null (i.e., a duplicate was found)
+
+   // 2. Creation with the now-unique certificateNumber
+    
     const user = await User.create({
       certificateNumber,
       name,
@@ -137,6 +141,14 @@ const addUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in adding user:", error);
+    // MongoDB Duplicate Key Error (Code 11000) - For unique indexes like email
+    if (error.code === 11000) {
+      return res.status(409).json({ // HTTP 409 Conflict
+          success: false,
+          message: "A user with this email or Employee ID already exists.",
+      });
+    }
+    // console.error("Error in adding user:", error);
     res.status(500).json({
       success: false,
       message: "Error in adding user",

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Eye, Mail } from 'lucide-react'
 import { apiConnector } from '../services/apiConnector';
 
-const API_URL = 'http://localhost:5000/api/v1/admin/login';
+const API_URL = 'http://localhost:5001/api/v1/admin/login';
 
 const LoginForm = ({onLogin}) => {
   const [formData, setFormData] = useState({
@@ -18,7 +18,12 @@ const LoginForm = ({onLogin}) => {
   //   password: "admin123", // ideally, passwords should be hashed in a real app
   // };
 
-  
+   const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  }
+
+
   const handleSubmit = async e => {
     e.preventDefault() 
     setError("");
@@ -53,7 +58,7 @@ const LoginForm = ({onLogin}) => {
         
         // 1. Store the actual token from the server
         localStorage.setItem("token", JSON.stringify(token));
-        localStorage.setItem("adminName", JSON.stringify(admin.name));
+        localStorage.setItem("adminName", (admin.name));
         localStorage.setItem("adminEmail", email); // Store email for display
         
         // 2. Clear error and trigger login success
@@ -67,46 +72,51 @@ const LoginForm = ({onLogin}) => {
 } catch (err) {
     // Handle network errors (e.g., server is down)
     console.error("Login API Error:", err);
-    setError("Could not connect to the server. Please try again later.");
+    setError(err.response.data.message
+ || "An error occurred during login.");
 } finally {
     setIsLoading(false); // Stop loading regardless of success/failure
+    setFormData({ email: "", password: "" }); // Clear form fields
 }
 };
 
   return (
-    <div className='w-1/3 bg-white p-6 rounded-md  '>
-      <div className='text-3xl font-bold text-center mb-6'>Login</div>
-      <form className='w-full h-full flex flex-col gap-4'>
-        <div className='bg-gray-300 p-3 flex items-center gap-1'>
+    <div className='min-h-screen flex items-center justify-center bg-gray-100 p-4'>
+     <div className='w-full sm:max-w-md mx-auto bg-white p-8 rounded-xl shadow-2xl'>
+        <div className='text-3xl font-bold text-center mb-6 text-gray-800'>Admin Login</div>
+          <form className='w-full  flex flex-col gap-4'>
+        <div className='bg-gray-100 p-3 flex items-center gap-3 rounded-lg border border-gray-300 focus-within:border-indigo-500 transition-all'>
           <Mail size={20} className='text-gray-500' />
           <input
+          name='email'
             type='email'
             placeholder='Email'
             value={formData.email}
-            onChange={e => setFormData({ ...formData, email: e.target.value })}
-            className='font-semibold focus:outline-none w-100'
+            onChange={(e)=>handleChange(e)}
+            className='font-medium bg-transparent focus:outline-none w-full'
           />
         </div>
-        <div className='bg-gray-300 p-3 flex items-center gap-1'>
+        <div className='bg-gray-100 p-3 flex items-center gap-3 rounded-lg border border-gray-300 focus-within:border-indigo-500 transition-all'>
           <Eye size={20} className='text-gray-500' />
           <input
+          name='password'
             type='password'
             placeholder='Password'
             value={formData.password}
-            onChange={e =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-            className='font-semibold focus:outline-none w-100'
+            onChange={(e)=>handleChange(e) }
+            className='font-medium bg-transparent focus:outline-none w-full'
           />
         </div>
         {error && (
-          <p className="text-red-500 text-center text-sm font-medium">{error}</p>
-        )}
+            <p className="text-red-600 text-center text-sm font-medium p-2 bg-red-100 rounded-lg">{error}</p>
+          )}
 
         <button
           disabled={isLoading}
           onClick={handleSubmit}
-          className='w-full bg-blue-500 p-3 text-white font-semibold cursor-pointer'
+          className={`w-full p-3 text-white font-semibold rounded-lg transition duration-200  ${isLoading 
+                ? 'bg-indigo-400 cursor-not-allowed' 
+                : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg'}`}
         >
           {isLoading ? 'Logging In...' : 'Login'}
         </button>
@@ -114,6 +124,8 @@ const LoginForm = ({onLogin}) => {
 
      {/* <p> {`${adminData.email}    ${adminData.password}`}</p>  */}
     </div>
+    </div>
+    
   )
 }
 

@@ -1,16 +1,12 @@
-import React, { useState } from "react";
-
-const ADD_API = "http://localhost:5000/api/v1/admin/adduser";
-
+import  { useState } from "react";
 const AddCertificateForm = ({ onAdd }) => {
   const [formData, setFormData] = useState({
-    certificateNumber:"",
     name: "",
     email: "",
     phone: "",
     employeeID: "",
     startDate: "",
-    endDate: "",
+    endDate: new Date().toISOString().slice(0, 10),
     Domain: "",
   });
 
@@ -18,7 +14,7 @@ const AddCertificateForm = ({ onAdd }) => {
   // const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
-    formData.certNumber = Math.floor(1000 + Math.random() * 9000);
+    // formData.certNumber = Math.floor(1000 + Math.random() * 9000);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -27,6 +23,15 @@ const AddCertificateForm = ({ onAdd }) => {
     // const {name, email, password } = formData;
 
     onAdd(formData);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      employeeID: "",
+      startDate: "",
+      endDate: new Date().toISOString().slice(0, 10),
+      Domain: "",
+    });
     
   };
 

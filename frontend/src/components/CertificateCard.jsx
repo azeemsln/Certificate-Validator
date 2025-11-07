@@ -10,16 +10,7 @@ import {
 } from "lucide-react";
 import calculateDurationInMonths from "../utils/calculateDurationInMonth";
 
-// const certificateData = {
-//   name: 'Rohit Verma',
-//   email: 'example@gmail.com',
-//   certificateNumber: '1234567890',
-//   domain: 'ReactJS',
-//   employeeId: 'EMP-123',
-//   phone: '1234567890',
-//   startDate: '12-12-2025',
-//   endDate: '12-12-2025'
-// }
+
 
 const CertificateCard = ({ certificateData }) => {
   const data = certificateData.data;
@@ -31,7 +22,7 @@ const CertificateCard = ({ certificateData }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-      <div className="bg-gradient-to-r bg-black/75 p-6 text-white">
+      <div className="bg-linear-to-r bg-black/75 p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">{data?.name}</h2>
@@ -54,7 +45,7 @@ const CertificateCard = ({ certificateData }) => {
             </h3>
 
             <div className="flex items-start">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+              <div className="shrink-0 w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                 <Mail className="text-blue-600" size={15} />
               </div>
               <div>
@@ -66,7 +57,7 @@ const CertificateCard = ({ certificateData }) => {
             </div>
 
             <div className="flex items-start">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+              <div className="shrink-0 w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                 <Phone className="text-blue-600" size={15} />
               </div>
               <div>
@@ -84,7 +75,7 @@ const CertificateCard = ({ certificateData }) => {
             </h3>
 
             <div className="flex items-start">
-              <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+              <div className="shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
                 <IdCard className="text-green-600" size={15} />
               </div>
               <div>
@@ -96,7 +87,7 @@ const CertificateCard = ({ certificateData }) => {
             </div>
 
             <div className="flex items-start">
-              <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+              <div className="shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
                 <Briefcase className="text-green-600" size={15} />
               </div>
               <div>

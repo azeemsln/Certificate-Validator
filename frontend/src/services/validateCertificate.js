@@ -1,10 +1,11 @@
 
 export const validate = async (certificateNumber) => {
   try {
-   const API_URL=`http://localhost:5000/api/v1/user/getdetails/${certificateNumber}`
+   const API_URL=`http://localhost:5001/api/v1/user/getdetails/${certificateNumber}`
     async function fetchUser() {
   try {
     const response = await fetch(API_URL);
+    // console.log("Validate API RESPONSE............", response)
 
     // Parse the response data
     const data = await response.json();
@@ -12,8 +13,9 @@ export const validate = async (certificateNumber) => {
     if (response.ok) {
       return data;
     } else {
-      const errorMessage = data.message;
+      const errorMessage = data.message || "Failed to validate certificate.";
       console.error(errorMessage);
+      return Promise.reject(new Error(errorMessage));
     }
   }
     catch (error) {
@@ -21,12 +23,9 @@ export const validate = async (certificateNumber) => {
   }
 };
 const data = await fetchUser();
-
-
-
     return data;
   } catch (error) {
-    console.log("Error: ", error.response);
-    throw Error(error.response.data.message);
+    // console.log("Error: ", error);
+    throw Error(error);
   }
 };

@@ -1,7 +1,5 @@
-import React from "react";
-import Swal from "sweetalert2";
-
-const API_URL = 'http://localhost:5000/api/v1/admin/adduser';
+// import React from "react";
+// import Swal from "sweetalert2";
 
 
 const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }) => {
@@ -10,23 +8,34 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }
  
   // console.log(currentItems,"currentItems");
  
-  const handleEdit = (cert) => {
-    Swal.fire({
-      icon: "info",
-      title: `Opening  ${cert.name}'s record for  updated!`,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  };
+  // const handleEdit = (cert) => {
+  //   Swal.fire({
+  //     icon: "info",
+  //     title: `Opening  ${cert.name}'s record for  updated!`,
+  //     showConfirmButton: false,
+  //     timer: 1500,
+  //   });
+  // };
 
-  const handleDocument = (cert) => {
-    Swal.fire({
-      icon: "info",
-      title: `Viewing document for ${cert.name}`,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  };
+  // const handleDocument = (cert) => {
+  //   Swal.fire({
+  //     icon: "info",
+  //     title: `Viewing document for ${cert.name}`,
+  //     showConfirmButton: false,
+  //     timer: 1500,
+  //   });
+  // };
+  
+
+  if(certificates.length===0){
+    return (
+      <div className="w-full py-10 flex flex-col items-center justify-center">
+        <h2 className="text-2xl font-semibold text-gray-700">
+          No Certificates Available
+        </h2>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 transition-all">
@@ -46,7 +55,8 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }
               <th className="p-3 border">Start Date</th>
               <th className="p-3 border">End Date</th>
               <th className="p-3 border">Domain</th>
-              <th className="p-3 border text-center">Actions</th>
+              {/* <th className="p-3 border text-center">Actions</th> */}
+              <th className="p-3 border text-center">Certificate Number</th>
             </tr>
           </thead>
 
@@ -61,7 +71,7 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }
                 </td>
                 <td className="p-3 border text-gray-600">{cert.email}</td>
                 <td className="p-3 border text-gray-600">{cert.phone}</td>
-                <td className="p-3 border text-gray-600">{cert.employeeId}</td>
+                <td className="p-3 border text-gray-600">{cert.employeeID}</td>
                 <td className="p-3 border text-gray-600">
                   {new Date(cert.startDate).toLocaleDateString()}
                 </td>
@@ -72,7 +82,9 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }
                   {cert.Domain}
                 </td>
                 <td className="p-3 border text-center space-x-2">
-                  <button
+                  
+                  {/* use this if needed */}
+                  {/* <button
                     onClick={() => handleEdit(cert)}
                     className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 transition"
                   >
@@ -83,7 +95,8 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange }
                     className="px-3 py-1 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition"
                   >
                     Document
-                  </button>
+                  </button> */}
+                   <span className="font-semibold">{cert.certificateNumber}</span>
                 </td>
               </tr>
             ))}

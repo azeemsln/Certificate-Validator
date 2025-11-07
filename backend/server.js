@@ -51,7 +51,7 @@ const startServer = async () => {
   try {
       // 1. Await the Database Connection
       console.log("Attempting to connect to database...");
-      await connect(); 
+      connect();
       console.log("Database connected successfully.");
 
       // 2. Seed Default Admin (only runs if no admin is found)

@@ -22,9 +22,11 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: Number,
+      unique:true
     },
     employeeID: {
       type: String,
+      unique:true
     },
     startDate: {
       type: Date,

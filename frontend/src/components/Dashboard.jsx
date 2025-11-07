@@ -5,8 +5,8 @@ import CertificateList from "./CertificateList";
 import { FileTextIcon, Plus, ShieldCheck } from "lucide-react";
 import Swal from "sweetalert2";
 import { apiConnector } from "../services/apiConnector";
-const ADD_API = "http://localhost:5000/api/v1/admin/adduser";
-const ALL_CERTIFICATES_API = "http://localhost:5000/api/v1/admin/getalluser";
+const ADD_API = "http://localhost:5001/api/v1/admin/adduser";
+const ALL_CERTIFICATES_API = "http://localhost:5001/api/v1/admin/getalluser";
 
 
 const Dashboard = () => {
@@ -61,17 +61,23 @@ const Dashboard = () => {
 
       if (!response.data.success) {
         throw new Error(response.data.message)
+       
       }
       Swal.fire({
-         icon: "success",
-         title: `Certificate added successfully!`,
+  title: `Certificate added successfully!`,
+  text: `Certificate No: ${response.data.data.certificateNumber}`,
+  icon: "success"
+});
+    } catch (error) {
+      Swal.fire({
+         icon: "error",
+         title: error.response.data.message || `Failed to add certificate.`,
          showConfirmButton: false,
          timer: 2000,
        });
-    } catch (error) {
-      console.log("User added API ERROR............", error)
+      // console.log("User added API ERROR............", error)
     }
-    setView("view");
+    
   };
   
    const handleEdit = (cert) => {
@@ -86,20 +92,22 @@ const Dashboard = () => {
   return (
     <div className="p-10 bg-gray-100 min-h-screen">
       <h2 className="text-3xl font-semibold mb-6">Admin Dashboard</h2>
-      <div className="flex gap-6 mb-8 ">
-        <button
+      {view && <div className="flex gap-6 mb-8 ">
+        {view === "view" ? ( <button
           className="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition"
           onClick={() => setView("add")}
         >
           Add Certificate
-        </button>
-        <button
+        </button>): <button
           className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition"
           onClick={() => setView("view")}
         >
           View All Certificates
-        </button>
-      </div>
+        </button>}
+        
+       
+      </div>}
+      
 
        {!view && (
         <div className="flex flex-col items-center justify-center text-center bg-white p-10 rounded-2xl shadow-md">
