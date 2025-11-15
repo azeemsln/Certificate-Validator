@@ -5,7 +5,7 @@ const seedDefaultAdmin = async () => {
     try {
         // --- Define Default Credentials ---
         const defaultName = process.env.DEFAULT_ADMIN_NAME || 'Super Admin';
-        const defaultEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@example.com';
+        const defaultEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@ten.com';
         const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'admin123'; 
         
         // 1. Check if an admin with the default email already exists
