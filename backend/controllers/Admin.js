@@ -49,8 +49,7 @@ import User from "../models/User.js";
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email,password);
-    
+    // console.log(email,password);
 
     if (!email || !password) {
       return res.status(400).json({
@@ -102,27 +101,51 @@ const login = async (req, res) => {
   }
 };
 const addUser = async (req, res) => {
-  function generateCertificateNumber() {
-    const timestamp = Date.now(); // milliseconds since 1970
-    const randomNum = Math.floor(Math.random() * 10000); // 0–9999
-    return `${timestamp}${randomNum}`;
-  }
   // Destructure inputs once, outside the try block
-  const { name, email, phone, employeeID, startDate, endDate, Domain } = req.body;
+  const { name, email, phone, employeeID, startDate, endDate, Domain } =
+    req.body;
+
+  async function generateCertificateNumber() {
+    // const timestamp = Date.now(); // milliseconds since 1970
+    // const randomNum = Math.floor(Math.random() * 10000); // 0–9999
+    // return `${timestamp}${randomNum}`;
+
+    // const lastCertificate = await User.findOne().sort({ _id: -1 });
+    const lastUser = await User.findOne().sort({ createdAt: -1 });
+    console.log(lastUser);
+    const lastCertificate = lastUser?.certificateNumber;
+    console.log(lastCertificate);
+    
+    let nextNumber = 1100; // default initial number
+
+    if (lastCertificate) {
+      // extract the numeric part
+      const lastNum = parseInt(lastCertificate?.split("/")[2]);
+      console.log(lastNum);
+      
+      nextNumber = lastNum + 1;
+    }
+    const domainCode = employeeID.split("/")[1];
+
+
+    console.log(domainCode);
+    return `TEN/${domainCode}/${nextNumber}`;
+  }
 
   try {
     let certificateNumber;
     let checkUser;
 
-    do{
-      certificateNumber= generateCertificateNumber();
-      checkUser=await User.findOne({certificateNumber});
-      console.log(`Attempted Cert: ${certificateNumber}, Found: ${!!checkUser}`);
-    }
-    while(checkUser) // Loop continues if checkUser is NOT null (i.e., a duplicate was found)
+    do {
+      certificateNumber =await generateCertificateNumber();
+      console.log(certificateNumber);
+      
+      checkUser = await User.findOne({ certificateNumber });
+      // console.log(`Attempted Cert: ${certificateNumber}, Found: ${!!checkUser}`);
+    } while (checkUser); // Loop continues if checkUser is NOT null (i.e., a duplicate was found)
 
-   // 2. Creation with the now-unique certificateNumber
-    
+    // 2. Creation with the now-unique certificateNumber
+
     const user = await User.create({
       certificateNumber,
       name,
@@ -143,9 +166,10 @@ const addUser = async (req, res) => {
     console.error("Error in adding user:", error);
     // MongoDB Duplicate Key Error (Code 11000) - For unique indexes like email
     if (error.code === 11000) {
-      return res.status(409).json({ // HTTP 409 Conflict
-          success: false,
-          message: "A user with this email or Employee ID already exists.",
+      return res.status(409).json({
+        // HTTP 409 Conflict
+        success: false,
+        message: "A user with this email or Employee ID already exists.",
       });
     }
     // console.error("Error in adding user:", error);
@@ -180,9 +204,10 @@ const logout = async (req, res) => {
 
 const getAllUser = async (req, res) => {
   try {
-    const allUser = await User.find({},
+    const allUser = await User.find(
+      {},
       {
-        certificateNumber:1,
+        certificateNumber: 1,
         name: 1,
         email: 1,
         phone: 1,
@@ -191,22 +216,22 @@ const getAllUser = async (req, res) => {
         endDate: 1,
         Domain: 1,
       }
-    )
-    
-    console.log(allUser.length);
+    );
+
+    // console.log(allUser.length);
     return res.status(200).json({
       success: true,
       data: allUser,
-    })
+    });
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return res.status(404).json({
       success: false,
       message: `Can't Fetch all User Data`,
       error: error.message,
-    })
+    });
   }
-}
+};
 
 // export { login, addUser, logout,signup };
 export { login, addUser, logout, getAllUser };

@@ -5,14 +5,14 @@ const seedDefaultAdmin = async () => {
     try {
         // --- Define Default Credentials ---
         const defaultName = process.env.DEFAULT_ADMIN_NAME || 'Super Admin';
-        const defaultEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@example.com';
+        const defaultEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@ten.com';
         const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'admin123'; 
         
         // 1. Check if an admin with the default email already exists
         const adminExists = await Admin.findOne({ email: defaultEmail });
 
         if (adminExists) {
-            console.log('✅ Default admin already exists. Skipping creation.');
+            // console.log('✅ Default admin already exists. Skipping creation.');
             return;
         }
 
@@ -29,11 +29,11 @@ const seedDefaultAdmin = async () => {
         });
 
         // NOTE: We only log the plain password for debugging/reference purposes.
-        console.log(`✨ Default admin created: ${defaultEmail} (Password: ${defaultPassword})`);
+        // console.log(`✨ Default admin created: ${defaultEmail} (Password: ${defaultPassword})`);
 
     } catch (error) {
         // If the hashing fails or database creation fails
-        console.error('❌ Error seeding default admin:', error.message);
+        // console.error('❌ Error seeding default admin:', error.message);
     }
 };
 

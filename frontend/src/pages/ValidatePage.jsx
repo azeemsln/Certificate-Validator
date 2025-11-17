@@ -25,15 +25,15 @@ const ValidatePage = () => {
     try {
       const data= await validate(certificateNumber)
       setCertificateData(data)
-      setSuccess({ value: 'Certificate Validate Successfull...' })
+      setSuccess({ value: 'Certificate Validate Successful...' })
       setError(null)
-    } catch (error) {
-      setError(error.message)
+    } catch (err) {
+      setError("Please Enter A valid  Certificate Number",err)
       setSuccess(null)
     }
   }
     else{
-      setError("Please Enter Certificate");
+      setError("Please Enter A Certificate Number");
     }
   }
   

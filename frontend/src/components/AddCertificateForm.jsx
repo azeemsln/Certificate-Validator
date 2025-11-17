@@ -1,162 +1,220 @@
-import  { useState } from "react";
-const AddCertificateForm = ({ onAdd }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    employeeID: "",
-    startDate: "",
-    endDate: new Date().toISOString().slice(0, 10),
-    Domain: "",
-  });
+// AddCertificateForm.jsx (Refactored for Figma Style with Dropdown)
 
-  // const [error, setError] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
+import React, { useState } from "react";
 
-  const handleChange = (e) => {
-    // formData.certNumber = Math.floor(1000 + Math.random() * 9000);
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+// Define the list of fixed domain options
+const DOMAIN_OPTIONS = [
+    "Java Developer", 
+    "Python", 
+    "ReactJs", 
+    "MERN/MEAN Stack", 
+    "Data Science", 
+    "React-Native", 
+    "Flutter", 
+    "Software Testing", 
+    "UI/UX"
+];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // const {name, email, password } = formData;
-
-    onAdd(formData);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      employeeID: "",
-      startDate: "",
-      endDate: new Date().toISOString().slice(0, 10),
-      Domain: "",
+const AddCertificateForm = ({ onAdd, onCancel }) => {
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        employeeID: "",
+        startDate: "",
+        endDate: new Date().toISOString().slice(0, 10), 
+        Domain: "", // Domain starts empty
     });
-    
-  };
 
-  return (
-    <div className="flex items-center justify-center min-h-[80vh] px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-lg bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-8"
-      >
-        <h3 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
-          Add New Certificate
-        </h3>
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-        {/* Name */}
-        <div className="mb-5">
-          <label className="block text-gray-700 font-medium mb-2">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter full name"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
-            required
-          />
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        // Simple client-side validation check (ensure all fields are filled)
+        if (Object.values(formData).some(val => val === '')) {
+             if (window.Swal) {
+                window.Swal.fire({
+                    icon: "warning",
+                    title: "Missing Information",
+                    text: "Please fill out all fields before submitting.",
+                    timer: 2000,
+                });
+             } else {
+                 console.warn("Please fill out all fields before submitting.");
+             }
+             return;
+        }
+        
+        // Check if a domain was actually selected (since we use an empty default value)
+        if (formData.Domain === "") {
+             if (window.Swal) {
+                window.Swal.fire({
+                    icon: "warning",
+                    title: "Missing Domain",
+                    text: "Please select a domain.",
+                    timer: 2000,
+                });
+             } else {
+                 console.warn("Please select a domain.");
+             }
+             return;
+        }
+
+        onAdd(formData);
+    };
+
+    return (
+        <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl w-full mx-auto"> 
+            
+            <h3 className="text-3xl font-bold text-gray-800 mb-8">
+                Add New Certificate
+            </h3>
+
+            <form onSubmit={handleSubmit}>
+
+                {/* Grid Layout for Inputs */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    {/* Name */}
+                    <div className="space-y-2">
+                        <label htmlFor="name" className="block text-gray-700 font-medium">Name</label>
+                        <input
+                            id="name"
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Enter full name"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            required
+                        />
+                    </div>
+
+                    {/* Email */}
+                    <div className="space-y-2">
+                        <label htmlFor="email" className="block text-gray-700 font-medium">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="Enter email address"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            required
+                        />
+                    </div>
+
+                    {/* Phone */}
+                    <div className="space-y-2">
+                        <label htmlFor="phone" className="block text-gray-700 font-medium">Phone</label>
+                        <input
+                            id="phone"
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="Enter phone number"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            required
+                        />
+                    </div>
+
+                    {/* Employee ID */}
+                    <div className="space-y-2">
+                        <label htmlFor="employeeID" className="block text-gray-700 font-medium">
+                            Employee ID
+                        </label>
+                        <input
+                            id="employeeID"
+                            type="text"
+                            name="employeeID"
+                            value={formData.employeeID}
+                            onChange={handleChange}
+                            placeholder="Enter employee ID"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            required
+                        />
+                    </div>
+
+                    {/* Start Date */}
+                    <div className="space-y-2">
+                        <label htmlFor="startDate" className="block text-gray-700 font-medium">
+                            Start Date
+                        </label>
+                        <input
+                            id="startDate"
+                            type="date"
+                            name="startDate"
+                            value={formData.startDate}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            required
+                        />
+                    </div>
+                    
+                    {/* End Date */}
+                    <div className="space-y-2">
+                        <label htmlFor="endDate" className="block text-gray-700 font-medium">
+                            End Date
+                        </label>
+                        <input
+                            id="endDate"
+                            type="date"
+                            name="endDate"
+                            value={formData.endDate}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            required
+                        />
+                    </div>
+                    
+                    {/* Domain (Updated to Dropdown) */}
+                    <div className="space-y-2 md:col-span-2">
+                        <label htmlFor="Domain" className="block text-gray-700 font-medium">Domain</label>
+                        <select
+                            id="Domain"
+                            name="Domain"
+                            value={formData.Domain}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 border border-gray-300 bg-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition appearance-none cursor-pointer"
+                            required
+                        >
+                            <option value="" disabled>--- Select a Domain ---</option>
+                            {DOMAIN_OPTIONS.map((domain) => (
+                                <option key={domain} value={domain}>
+                                    {domain}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                </div> {/* End Grid */}
+
+                {/* Buttons */}
+                <div className="flex justify-end space-x-4 mt-8">
+                    {/* Cancel Button */}
+                    <button
+                        type="button"
+                        onClick={onCancel}
+                        className="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg shadow-sm hover:bg-gray-50 transition-all"
+                    >
+                        Cancel
+                    </button>
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transform transition-all"
+                    >
+                        Save Certificate
+                    </button>
+                </div>
+            </form>
         </div>
-
-        {/* Email */}
-        <div className="mb-5">
-          <label className="block text-gray-700 font-medium mb-2">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter email address"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
-            required
-          />
-        </div>
-
-        {/* Phone */}
-        <div className="mb-5">
-          <label className="block text-gray-700 font-medium mb-2">Phone</label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="Enter phone number"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
-            required
-          />
-        </div>
-
-        {/* Employee ID */}
-        <div className="mb-5">
-          <label className="block text-gray-700 font-medium mb-2">
-            Employee ID
-          </label>
-          <input
-            type="text"
-            name="employeeID"
-            value={formData.employeeID}
-            onChange={handleChange}
-            placeholder="Enter employee ID"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
-            required
-          />
-        </div>
-
-        {/* Dates */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              Start Date
-            </label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              End Date
-            </label>
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
-              required
-            />
-          </div>
-        </div>
-
-        {/* Domain */}
-        <div className="mb-6">
-          <label className="block text-gray-700 font-medium mb-2">Domain</label>
-          <input
-            type="text"
-            name="Domain"
-            value={formData.Domain}
-            onChange={handleChange}
-            placeholder="e.g., Web Development, Data Science"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
-            required
-          />
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-linear-to-r from-indigo-500 to-indigo-600 text-white font-semibold py-3 rounded-lg shadow-md hover:from-indigo-600 hover:to-indigo-700 transform hover:scale-[1.02] transition-all"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
-  );
+    );
 };
 
 export default AddCertificateForm;
