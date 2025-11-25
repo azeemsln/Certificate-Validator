@@ -101,51 +101,37 @@ const login = async (req, res) => {
   }
 };
 const addUser = async (req, res) => {
-  // Destructure inputs once, outside the try block
-  const { name, email, phone, employeeID, startDate, endDate, Domain } =
-    req.body;
+  const { name, email, phone, employeeID, startDate, endDate, Domain } = req.body;
 
-  async function generateCertificateNumber() {
-    // const timestamp = Date.now(); // milliseconds since 1970
-    // const randomNum = Math.floor(Math.random() * 10000); // 0–9999
-    // return `${timestamp}${randomNum}`;
-
-    // const lastCertificate = await User.findOne().sort({ _id: -1 });
+  // ------------------ Certificate Generator ------------------
+  const generateCertificateNumber = async () => {
     const lastUser = await User.findOne().sort({ createdAt: -1 });
-    console.log(lastUser);
     const lastCertificate = lastUser?.certificateNumber;
-    console.log(lastCertificate);
-    
-    let nextNumber = 1100; // default initial number
+
+    let nextNumber = 1100; // starting number
 
     if (lastCertificate) {
-      // extract the numeric part
-      const lastNum = parseInt(lastCertificate?.split("/")[2]);
-      console.log(lastNum);
-      
-      nextNumber = lastNum + 1;
+      const lastNum = parseInt(lastCertificate.split("/")[2]);
+      if (!isNaN(lastNum)) {
+        nextNumber = lastNum + 1;
+      }
     }
+
     const domainCode = employeeID.split("/")[1];
-
-
-    console.log(domainCode);
     return `TEN/${domainCode}/${nextNumber}`;
-  }
+  };
 
   try {
+    // ------------------ Generate Unique Certificate ------------------
     let certificateNumber;
-    let checkUser;
+    let isDuplicate;
 
     do {
-      certificateNumber =await generateCertificateNumber();
-      console.log(certificateNumber);
-      
-      checkUser = await User.findOne({ certificateNumber });
-      // console.log(`Attempted Cert: ${certificateNumber}, Found: ${!!checkUser}`);
-    } while (checkUser); // Loop continues if checkUser is NOT null (i.e., a duplicate was found)
+      certificateNumber = await generateCertificateNumber();
+      isDuplicate = await User.findOne({ certificateNumber });
+    } while (isDuplicate);
 
-    // 2. Creation with the now-unique certificateNumber
-
+    // ------------------ Create User ------------------
     const user = await User.create({
       certificateNumber,
       name,
@@ -157,29 +143,31 @@ const addUser = async (req, res) => {
       Domain,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: user,
       message: "User added successfully!",
     });
+
   } catch (error) {
     console.error("Error in adding user:", error);
-    // MongoDB Duplicate Key Error (Code 11000) - For unique indexes like email
+
+    // Duplicate key error (email or employeeID)
     if (error.code === 11000) {
       return res.status(409).json({
-        // HTTP 409 Conflict
         success: false,
         message: "A user with this email or Employee ID already exists.",
       });
     }
-    // console.error("Error in adding user:", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       success: false,
       message: "Error in adding user",
       error: error.message,
     });
   }
 };
+
 const logout = async (req, res) => {
   try {
     res.cookie("token", "", {

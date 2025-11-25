@@ -9,6 +9,7 @@ import {
 import calculateDurationInMonths from "../utils/calculateDurationInMonth";
 
 const CertificateCard = ({ certificateData }) => {
+   console.log(certificateData);
   const data = certificateData.data;
   const durationText = calculateDurationInMonths(
     data?.startDate,

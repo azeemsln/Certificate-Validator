@@ -3,16 +3,14 @@ import User from "../models/User.js";
 
 const getDetails=async (req, res) => {
   try {
-    const { certificateNumber } = req.params;
-    // console.log(certificateNumber);
-    
-    const certNum = Number(certificateNumber)
-    const user = await User.findOne({certificateNumber:certNum} );
+    const certificateNo =decodeURIComponent(req.params.certificateNumber);
+    console.log(req.params);
+    const user = await User.findOne({certificateNumber:certificateNo } );
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found",
+        message: "The certificate number you entered does not exist or is incorrect. Please verify and try again.",
       });
     }
 

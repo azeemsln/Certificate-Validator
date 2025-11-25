@@ -3,8 +3,10 @@ export const validate = async (certificateNumber) => {
   try {
     async function fetchUser() {
   try {
-    const response = await fetch(`${import.meta.env.VITE_VALIDATE_URL}${certificateNumber}`);
-
+    const certificateNo = encodeURIComponent(certificateNumber);
+    const response = await fetch(`${import.meta.env.VITE_VALIDATE_URL}/${certificateNo}`);
+  console.log(response);
+  
 
     const data = await response.json();
 

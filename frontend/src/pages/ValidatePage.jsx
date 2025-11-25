@@ -15,20 +15,24 @@ const ValidatePage = () => {
   const handleChange = e => {
     const value = e.target.value
 
-    if (/^\d*$/.test(value)) {
       setCertificateNumber(value)
-    }
   }
 
   const handleSubmit = async () => {
+    console.log(certificateNumber);
+    
     if(certificateNumber){
     try {
-      const data= await validate(certificateNumber)
+      const data= await validate(certificateNumber);
+      console.log(data);
+      
       setCertificateData(data)
       setSuccess({ value: 'Certificate Validate Successful...' })
       setError(null)
     } catch (err) {
-      setError("Please Enter A valid  Certificate Number",err)
+      console.log(err);
+      
+      setError(err.message)
       setSuccess(null)
     }
   }
