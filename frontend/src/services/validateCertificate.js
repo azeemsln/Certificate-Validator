@@ -5,7 +5,7 @@ export const validate = async (certificateNumber) => {
   try {
     const certificateNo = encodeURIComponent(certificateNumber);
     const response = await fetch(`${import.meta.env.VITE_VALIDATE_URL}/${certificateNo}`);
-  console.log(response);
+  // console.log(response);
   
 
     const data = await response.json();
@@ -14,7 +14,7 @@ export const validate = async (certificateNumber) => {
       return data;
     } else {
       const errorMessage = data.message || "Failed to validate certificate.";
-      console.error(errorMessage);
+      // console.error(errorMessage);
       return Promise.reject(new Error(errorMessage));
     }
   }

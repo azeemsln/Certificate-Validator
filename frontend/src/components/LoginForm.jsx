@@ -66,7 +66,7 @@ const LoginForm = ({onLogin}) => {
     }
 } catch (err) {
     // Handle network errors (e.g., server is down)
-    console.error("Login API Error:", err);
+    // console.error("Login API Error:", err);
     setError(err.response.data.message
  || "An error occurred during login.");
 } finally {

@@ -13,6 +13,9 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange, 
 
     // 2. Apply filtering to the certificates list
     const filteredCertificates = useMemo(() => {
+        console.log(JSON.stringify(certificates));
+        
+        
         let filtered = certificates;
 
         // Filter by Search Term (Name or Email)
@@ -46,13 +49,13 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange, 
     // --- End Pagination/Filtering Logic ---
     
 
-    const handleEdit = (cert) => {
-        if (onEdit) onEdit(cert);
-    };
+    // const handleEdit = (cert) => {
+    //     if (onEdit) onEdit(cert);
+    // };
 
-    const handleDocument = (cert) => {
-        console.log(`Viewing document for: ${cert.name}`);
-    };
+    // const handleDocument = (cert) => {
+    //     console.log(`Viewing document for: ${cert.name}`);
+    // };
     
 
     if(certificates.length === 0){
@@ -133,7 +136,7 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange, 
                             <th className="p-4 text-left border-b">End Date</th>
                             <th className="p-4 text-left border-b">Domain</th>
                             <th className="p-4 text-center border-b">Certificate No.</th>
-                            <th className="p-4 text-center border-b">Actions</th>
+                            <th className="p-4 text-center border-b">Issued On</th>
                         </tr>
                     </thead>
 
@@ -160,7 +163,8 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange, 
                                     <span className="font-semibold text-gray-700 text-xs">{cert.certificateNumber}</span>
                                 </td>
                                 <td className="p-4 text-center space-x-2 whitespace-nowrap">
-                                    <button
+                                    {cert.updatedAt.trim().slice(0,10)}
+                                    {/* <button
                                         onClick={() => handleEdit(cert)}
                                         className="text-indigo-600 hover:text-indigo-800 transition p-1"
                                         title="Edit"
@@ -173,7 +177,7 @@ const CertificateList = ({ certificates, currentPage, totalPages, onPageChange, 
                                         title="View Document"
                                     >
                                         <FileText size={18} />
-                                    </button>
+                                    </button> */}
                                 </td>
                             </tr>
                         ))}

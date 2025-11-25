@@ -4,7 +4,7 @@ import User from "../models/User.js";
 const getDetails=async (req, res) => {
   try {
     const certificateNo =decodeURIComponent(req.params.certificateNumber);
-    console.log(req.params);
+    console.log(req.params.certificateNumber);
     const user = await User.findOne({certificateNumber:certificateNo } );
 
     if (!user) {

@@ -203,6 +203,7 @@ const getAllUser = async (req, res) => {
         startDate: 1,
         endDate: 1,
         Domain: 1,
+        updatedAt:1
       }
     );
 

@@ -39,7 +39,7 @@ const AdminDashboardPage = ({ handleLogout }) => {
          // ... (your handleAdd function remains here)
         try {
             const response = await apiConnector("POST", import.meta.env.VITE_ADD_API, formData, formData);
-            console.log(response);
+            // console.log(response);
             
 
             if (!response.data.success) {

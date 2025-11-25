@@ -19,18 +19,18 @@ const ValidatePage = () => {
   }
 
   const handleSubmit = async () => {
-    console.log(certificateNumber);
+    // console.log(certificateNumber);
     
     if(certificateNumber){
     try {
       const data= await validate(certificateNumber);
-      console.log(data);
+      // console.log(data);
       
       setCertificateData(data)
       setSuccess({ value: 'Certificate Validate Successful...' })
       setError(null)
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       
       setError(err.message)
       setSuccess(null)
