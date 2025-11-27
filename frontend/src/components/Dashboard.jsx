@@ -11,8 +11,8 @@ const AdminDashboardPage = ({ handleLogout }) => {
     const [certificates, setCertificates] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // NEW STATE for mobile menu
-    const itemsPerPage = 5;
-    const totalPages = Math.ceil(certificates?.length / itemsPerPage);
+    // const itemsPerPage = 5;
+    // const totalPages = Math.ceil(certificates?.length / itemsPerPage);
 
     // --- Data Fetching Logic (Omitted for brevity, assumed unchanged) ---
     useEffect(() => {
@@ -69,14 +69,14 @@ const AdminDashboardPage = ({ handleLogout }) => {
         }
     };
     
-    const handleEdit = (cert) => {
-        Swal.fire({
-            icon: "info",
-            title: `Opening ${cert.name}'s certificate for editing!`,
-            showConfirmButton: false,
-            timer: 2000,
-        });
-    };
+    // const handleEdit = (cert) => {
+    //     Swal.fire({
+    //         icon: "info",
+    //         title: `Opening ${cert.name}'s certificate for editing!`,
+    //         showConfirmButton: false,
+    //         timer: 2000,
+    //     });
+    // };
 
     const handleNavClick = (newView) => {
         setView(newView);
@@ -175,9 +175,7 @@ const AdminDashboardPage = ({ handleLogout }) => {
                         <CertificateList
                             certificates={certificates}
                             currentPage={currentPage}
-                            totalPages={totalPages}
                             onPageChange={setCurrentPage}
-                            onEdit={handleEdit}
                             uniqueDomains={uniqueDomains}
                         />
                     )}

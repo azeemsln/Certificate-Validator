@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Search } from 'lucide-react';
 
-const CertificateList = ({ certificates, currentPage, totalPages, onPageChange, onEdit, uniqueDomains }) => {
+const CertificateList = ({ certificates, currentPage, onPageChange,  uniqueDomains }) => {
     
     // --- State for Filtering ---
     const [searchTerm, setSearchTerm] = useState('');

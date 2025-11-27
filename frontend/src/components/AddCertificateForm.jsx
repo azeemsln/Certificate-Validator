@@ -65,7 +65,7 @@ const AddCertificateForm = ({ onAdd, onCancel }) => {
 
         // Restrict employee digits input
         if (name === "employeeNumber") {
-            if (/^\d{0,6}$/.test(value)) {
+            if (/^\d{0,8}$/.test(value)) {
                 setFormData({ ...formData, employeeNumber: value });
             }
             return;
@@ -221,10 +221,6 @@ const AddCertificateForm = ({ onAdd, onCancel }) => {
                                 required
                             />
                         </div>
-
-                        <p className="text-xs text-gray-500">
-                            Enter last 4–6 digits only (numbers)
-                        </p>
                     </div>
 
                     {/* Start Date */}

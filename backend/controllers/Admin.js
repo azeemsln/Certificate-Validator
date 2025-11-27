@@ -108,7 +108,7 @@ const addUser = async (req, res) => {
     const lastUser = await User.findOne().sort({ createdAt: -1 });
     const lastCertificate = lastUser?.certificateNumber;
 
-    let nextNumber = 1100; // starting number
+    let nextNumber = 21990; // starting number
 
     if (lastCertificate) {
       const lastNum = parseInt(lastCertificate.split("/")[2]);
