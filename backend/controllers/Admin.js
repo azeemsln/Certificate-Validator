@@ -117,8 +117,8 @@ const addUser = async (req, res) => {
       }
     }
 
-    const domainCode = employeeID.split("/")[1];
-    return `TEN/${domainCode}/${nextNumber}`;
+    // const domainCode = employeeID.split("/")[1];
+    return `TEN/CL/${nextNumber}`;
   };
 
   try {

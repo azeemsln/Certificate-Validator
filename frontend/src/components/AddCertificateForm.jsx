@@ -1,157 +1,184 @@
-// AddCertificateForm.jsx (Refactored for Figma Style with Dropdown)
+// AddCertificateForm.jsx (Fully Updated)
 
 import React, { useState } from "react";
 
-// Define the list of fixed domain options
 const DOMAIN_OPTIONS = [
-    "Java Developer", 
-    "Python", 
-    "ReactJs", 
-    "MERN Stack", 
+    "HR Finance", 
+    "Digital Marketing", 
+    "Content Writing", 
+    "Sales Marketing",
     "MEAN Stack",
+    "MERN Stack", 
+    "Java Developer", 
+    "ReactJs", 
+    "Python", 
     "Data Science", 
-    "React-Native", 
-    "Flutter", 
-    "Software Testing", 
-    "UI/UX"
+    "Django",
+    "Software/QA Tester",
+    "Flutter",
+    "React Native",
+    "UI/UX",
+    "AI Tool"
 ];
+
 const DOMAIN_CODES = {
+    "HR Finance": "HR",
+    "Digital Marketing": "DM",
+    "Content Writing": "CR",
+    "Sales Marketing": "SM",
+    "MEAN Stack": "MEAN",
+    "MERN Stack": "MERN",
     "Java Developer": "JAVA",
+    "ReactJs": "TECH",
     "Python": "PY",
-    "ReactJs": "REACT",
-    "MERN Stack":"MERN",
-    "MEAN Stack":"MEAN",
     "Data Science": "DS",
-    "React-Native": "RN",
-    "Flutter": "FLUT",
-    "Software Testing": "QA",
-    "UI/UX": "UI-UX"
+    "Django": "DJ",
+    "Software/QA Tester": "MQ",
+    "Flutter": "FL",
+    "React Native": "RN",
+    "UI/UX": "UI",
+    "AI Tool": "AI"
 };
 
-
 const AddCertificateForm = ({ onAdd, onCancel }) => {
+    const [domainCode, setDomainCode] = useState("");
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         phone: "",
-        employeeID: "",
+        employeeNumber: "",  // user enters only last digits
         startDate: "",
-        endDate: new Date().toISOString().slice(0, 10), 
-        Domain: "", // Domain starts empty
+        endDate: new Date().toISOString().slice(0, 10),
+        Domain: "",
     });
 
     const handleChange = (e) => {
-    const { name, value } = e.target;
+        const { name, value } = e.target;
 
-    // When domain changes
-    if (name === "Domain") {
-        const code = DOMAIN_CODES[value];   // get short code              // admin-provided or static for now
-        
-        setFormData({
-            ...formData,
-            Domain: value,
-            employeeID: `TEN/${code}/`
-        });
-        return;
-    }
+        if (name === "Domain") {
+            const code = DOMAIN_CODES[value];
+            setDomainCode(code); 
+            setFormData({ ...formData, Domain: value });
+            return;
+        }
 
-    setFormData({ ...formData, [name]: value });
-};
+        // Restrict employee digits input
+        if (name === "employeeNumber") {
+            if (/^\d{0,6}$/.test(value)) {
+                setFormData({ ...formData, employeeNumber: value });
+            }
+            return;
+        }
 
+        setFormData({ ...formData, [name]: value });
+    };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        
-        // Simple client-side validation check (ensure all fields are filled)
-        if (Object.values(formData).some(val => val === '')) {
-             if (window.Swal) {
-                window.Swal.fire({
-                    icon: "warning",
-                    title: "Missing Information",
-                    text: "Please fill out all fields before submitting.",
-                    timer: 2000,
-                });
-             } else {
-                 console.warn("Please fill out all fields before submitting.");
-             }
-             return;
-        }
-        
-        // Check if a domain was actually selected (since we use an empty default value)
-        if (formData.Domain === "") {
-             if (window.Swal) {
-                window.Swal.fire({
-                    icon: "warning",
-                    title: "Missing Domain",
-                    text: "Please select a domain.",
-                    timer: 2000,
-                });
-             } else {
-                 console.warn("Please select a domain.");
-             }
-             return;
+
+        // Validate empty fields
+        if (Object.values(formData).some(val => val === "")) {
+            return window.Swal?.fire({
+                icon: "warning",
+                title: "Missing Information",
+                text: "Please fill out all fields.",
+                timer: 1500,
+            });
         }
 
-        onAdd(formData);
+        // Validate domain
+        if (!domainCode) {
+            return window.Swal?.fire({
+                icon: "warning",
+                title: "Missing Domain",
+                text: "Please select a domain.",
+                timer: 1500,
+            });
+        }
+
+        // Validate employee number
+        if (formData.employeeNumber.length < 4 || formData.employeeNumber.length > 6) {
+            return window.Swal?.fire({
+                icon: "warning",
+                title: "Invalid Employee Number",
+                text: "Must be between 4–6 digits.",
+                timer: 1500,
+            });
+        }
+
+        // Build final employee ID
+        const finalEmployeeID = `TEN/${domainCode}/${formData.employeeNumber}`;
+
+        const dataToSave = {
+            ...formData,
+            employeeID: finalEmployeeID,
+        };
+
+        delete dataToSave.employeeNumber;
+
+        onAdd(dataToSave);
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl w-full mx-auto"> 
-            
+        <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl w-full mx-auto">
+
             <h3 className="text-3xl font-bold text-gray-800 mb-8">
                 Add New Certificate
             </h3>
 
             <form onSubmit={handleSubmit}>
-
-                {/* Grid Layout for Inputs */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     {/* Name */}
                     <div className="space-y-2">
-                        <label htmlFor="name" className="block text-gray-700 font-medium">Name</label>
+                        <label className="block text-gray-700 font-medium">
+                            Name <span className="text-xl text-red-700">*</span>
+                        </label>
                         <input
-                            id="name"
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Enter full name"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                             required
                         />
                     </div>
 
                     {/* Email */}
                     <div className="space-y-2">
-                        <label htmlFor="email" className="block text-gray-700 font-medium">Email</label>
+                        <label className="block text-gray-700 font-medium">
+                            Email <span className="text-xl text-red-700">*</span>
+                        </label>
                         <input
-                            id="email"
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="Enter email address"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                             required
                         />
                     </div>
 
-                     {/* Domain (Updated to Dropdown) */}
+                    {/* Domain */}
                     <div className="space-y-2 md:col-span-2">
-                        <label htmlFor="Domain" className="block text-gray-700 font-medium">Domain</label>
+                        <label className="block text-gray-700 font-medium">
+                            Domain <span className="text-xl text-red-700">*</span>
+                        </label>
                         <select
-                            id="Domain"
                             name="Domain"
                             value={formData.Domain}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 bg-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition appearance-none cursor-pointer"
-                            required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white"
                         >
-                            <option value="" disabled>--- Select a Domain ---</option>
-                            {DOMAIN_OPTIONS.map((domain) => (
-                                <option key={domain} value={domain}>
-                                    {domain}
+                            <option value="" disabled>
+                                --- Select a Domain ---
+                            </option>
+                            {DOMAIN_OPTIONS.map((d) => (
+                                <option key={d} value={d}>
+                                    {d}
                                 </option>
                             ))}
                         </select>
@@ -159,86 +186,92 @@ const AddCertificateForm = ({ onAdd, onCancel }) => {
 
                     {/* Phone */}
                     <div className="space-y-2">
-                        <label htmlFor="phone" className="block text-gray-700 font-medium">Phone</label>
+                        <label className="block text-gray-700 font-medium">
+                            Phone <span className="text-xl text-red-700">*</span>
+                        </label>
                         <input
-                            id="phone"
                             type="tel"
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
                             placeholder="Enter phone number"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                             required
                         />
                     </div>
 
                     {/* Employee ID */}
                     <div className="space-y-2">
-                        <label htmlFor="employeeID" className="block text-gray-700 font-medium">
-                            Employee ID
+                        <label className="block text-gray-700 font-medium">
+                            Employee ID <span className="text-xl text-red-700">*</span>
                         </label>
-                        <input
-                            id="employeeID"
-                            type="text"
-                            name="employeeID"
-                            value={formData.employeeID}
-                            onChange={handleChange}
-                            placeholder="Enter employee ID"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
-                            required
-                        />
+
+                        <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-3">
+                            <span className="font-semibold text-gray-700">
+                                TEN/{domainCode || "___"}/
+                            </span>
+
+                            <input
+                                type="text"
+                                name="employeeNumber"
+                                value={formData.employeeNumber}
+                                onChange={handleChange}
+                                placeholder="1234"
+                                className="w-full border-0 outline-none"
+                                required
+                            />
+                        </div>
+
+                        <p className="text-xs text-gray-500">
+                            Enter last 4–6 digits only (numbers)
+                        </p>
                     </div>
 
                     {/* Start Date */}
                     <div className="space-y-2">
-                        <label htmlFor="startDate" className="block text-gray-700 font-medium">
-                            Start Date
+                        <label className="block text-gray-700 font-medium">
+                            Start Date <span className="text-xl text-red-700">*</span>
                         </label>
                         <input
-                            id="startDate"
                             type="date"
                             name="startDate"
                             value={formData.startDate}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                             required
                         />
                     </div>
-                    
+
                     {/* End Date */}
                     <div className="space-y-2">
-                        <label htmlFor="endDate" className="block text-gray-700 font-medium">
-                            End Date
+                        <label className="block text-gray-700 font-medium">
+                            End Date <span className="text-xl text-red-700">*</span>
                         </label>
                         <input
-                            id="endDate"
                             type="date"
                             name="endDate"
                             value={formData.endDate}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                             required
                         />
                     </div>
-                    
-                   
 
-                </div> {/* End Grid */}
+                </div>
 
                 {/* Buttons */}
                 <div className="flex justify-end space-x-4 mt-8">
-                    {/* Cancel Button */}
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg shadow-sm hover:bg-gray-50 transition-all"
+                        className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg"
                     >
                         Cancel
                     </button>
-                    {/* Submit Button */}
+
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transform transition-all"
+                        className="px-6 py-3 bg-indigo-600 text-white rounded-lg"
                     >
                         Save Certificate
                     </button>

@@ -23,7 +23,8 @@ const ValidatePage = () => {
     
     if(certificateNumber){
     try {
-      const data= await validate(certificateNumber);
+     let copyCertificateNumber= certificateNumber.trim().toLocaleUpperCase();
+      const data= await validate(`TEN/${copyCertificateNumber}`);
       // console.log(data);
       
       setCertificateData(data)
@@ -48,13 +49,17 @@ const ValidatePage = () => {
       <Header heading='Validate Certificate' />
       <main className='mt-5 m-2'>
         <div className='w-full flex justify-center md:flex-nowrap flex-wrap gap-2 sm:gap-5 border p-2 rounded-lg'>
-          <input
+          <div className='flex justify-center items-center sm:w-4/5 p-3 font-semibold focus:outline-none rounded-lg  border border-white'>
+          <span>TEN/</span>
+              <input
             type='text'
             placeholder='Certificate Number'
             value={certificateNumber}
             onChange={handleChange}
-            className='w-full sm:w-4/5 p-3 font-semibold focus:outline-none rounded-lg  border border-white'
+            className='w-full h-full bg-transparent focus:outline-none'
           />
+            </div>
+          
           <button
             onClick={handleSubmit}
             className='w-full sm:w-1/5 bg-gray-700 p-3 text-white font-semibold cursor-pointer rounded-lg'
