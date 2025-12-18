@@ -14,7 +14,7 @@ const ValidatePage = () => {
 
   const handleChange = e => {
     const value = e.target.value
-
+    
       setCertificateNumber(value)
   }
 
@@ -25,7 +25,7 @@ const ValidatePage = () => {
     try {
      let copyCertificateNumber= certificateNumber.trim().toLocaleUpperCase();
       const data= await validate(`TEN/${copyCertificateNumber}`);
-      // console.log(data);
+      console.log(data);
       
       setCertificateData(data)
       setSuccess({ value: 'Certificate Validate Successful...' })
