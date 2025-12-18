@@ -1,6 +1,7 @@
 // AddCertificateForm.jsx (Fully Updated)
 
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 const DOMAIN_OPTIONS = [
     "HR Finance", 
@@ -39,7 +40,7 @@ const DOMAIN_CODES = {
     "UI/UX": "UI",
     "AI Tool": "AI"
 };
-
+ 
 const AddCertificateForm = ({ onAdd, onCancel }) => {
     const [domainCode, setDomainCode] = useState("");
 
@@ -79,7 +80,7 @@ const AddCertificateForm = ({ onAdd, onCancel }) => {
 
         // Validate empty fields
         if (Object.values(formData).some(val => val === "")) {
-            return window.Swal?.fire({
+            return Swal?.fire({
                 icon: "warning",
                 title: "Missing Information",
                 text: "Please fill out all fields.",
@@ -89,7 +90,7 @@ const AddCertificateForm = ({ onAdd, onCancel }) => {
 
         // Validate domain
         if (!domainCode) {
-            return window.Swal?.fire({
+            return Swal?.fire({
                 icon: "warning",
                 title: "Missing Domain",
                 text: "Please select a domain.",
@@ -99,11 +100,11 @@ const AddCertificateForm = ({ onAdd, onCancel }) => {
 
         // Validate employee number
         if (formData.employeeNumber.length < 4 || formData.employeeNumber.length > 6) {
-            return window.Swal?.fire({
+            return Swal?.fire({
                 icon: "warning",
                 title: "Invalid Employee Number",
                 text: "Must be between 4–6 digits.",
-                timer: 1500,
+                timer: 1500, 
             });
         }
 
@@ -116,6 +117,7 @@ const AddCertificateForm = ({ onAdd, onCancel }) => {
         };
 
         delete dataToSave.employeeNumber;
+        // console.log("Saving certificate:", dataToSave);
 
         onAdd(dataToSave);
     };

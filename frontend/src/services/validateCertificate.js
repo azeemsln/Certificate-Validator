@@ -1,3 +1,9 @@
+import { endpoints } from './apis'
+
+const {
+  VALIDATE_URL,
+} = endpoints
+
 
 export const validate = async (certificateNumber) => {
   try {
@@ -6,7 +12,7 @@ export const validate = async (certificateNumber) => {
     const certificateNo = encodeURIComponent(certificateNumber);
     console.log(certificateNo);
     
-    const response = await fetch(`${import.meta.env.VITE_VALIDATE_URL}/${certificateNo}`);
+    const response = await fetch(`${VALIDATE_URL}/${certificateNo}`);
   console.log(response);
   
 

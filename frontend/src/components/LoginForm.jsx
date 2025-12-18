@@ -2,10 +2,12 @@
 import { useState } from 'react'
 import { Eye, Mail } from 'lucide-react'
 import { apiConnector } from '../services/apiConnector';
+import { endpoints } from '../services/apis'
 
-
-
-const LoginForm = ({onLogin}) => {
+const {
+  LOGIN_API,
+} = endpoints 
+ const LoginForm = ({onLogin}) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -37,7 +39,7 @@ const LoginForm = ({onLogin}) => {
       return;
   }
   try {
-    const response = await apiConnector("POST", import.meta.env.VITE_LOGIN_API,{
+    const response = await apiConnector("POST",LOGIN_API,{
       email,password
     })
     

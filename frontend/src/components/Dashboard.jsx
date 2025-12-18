@@ -6,6 +6,13 @@ import Swal from "sweetalert2";
 import { apiConnector } from "../services/apiConnector";
 import Navbar from "./Navbar";
 import logo from "../assets/the-entrepreneurship-network-cover.jpg";
+import { endpoints } from '../services/apis'
+
+const {
+  ADD_API,
+  ALL_CERTIFICATES_API,
+} = endpoints
+
 const AdminDashboardPage = ({ handleLogout }) => { 
     const [view, setView] = useState("view"); 
     const [certificates, setCertificates] = useState([]);
@@ -19,7 +26,7 @@ const AdminDashboardPage = ({ handleLogout }) => {
         // ... (your fetchCertificates function remains here)
         async function fetchCertificates() {
             try {
-                const response = await apiConnector("GET", import.meta.env.VITE_ALL_CERTIFICATES_API);
+                const response = await apiConnector("GET",ALL_CERTIFICATES_API);
                 if (response.data && response.data.success) {
                     setCertificates(response.data.data);
                 } else {
@@ -37,9 +44,11 @@ const AdminDashboardPage = ({ handleLogout }) => {
     }, [certificates]);
     const handleAdd = async (formData) => {
          // ... (your handleAdd function remains here)
+         console.log(formData);
+         
         try {
-            const response = await apiConnector("POST", import.meta.env.VITE_ADD_API, formData, formData);
-            // console.log(response);
+            const response = await apiConnector("POST",ADD_API, formData, formData);
+            console.log(response);
             
 
             if (!response.data.success) {
